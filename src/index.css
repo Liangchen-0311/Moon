@@ -2,94 +2,54 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
-
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 340 60% 96%;
+    --foreground: 215 25% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 215 25% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 215 25% 15%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 340 55% 58%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 340 40% 95%;
+    --secondary-foreground: 340 55% 58%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 210 20% 96%;
+    --muted-foreground: 215 14% 46%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 340 40% 95%;
+    --accent-foreground: 340 55% 58%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 340 20% 90%;
+    --input: 210 20% 96%;
+    --ring: 340 55% 58%;
 
-    --radius: 0.5rem;
+    --radius: 1rem;
+
+    /* App-specific tokens */
+    --lunar-pink: 340 55% 58%;
+    --lunar-bg: 340 60% 96%;
+    --lunar-purple: 245 50% 67%;
+    --lunar-teal: 157 68% 37%;
+    --lunar-surface: 0 0% 100%;
+    --lunar-shadow: 0 1px 3px 0 rgba(212, 83, 126, 0.05), 0 1px 2px -1px rgba(212, 83, 126, 0.1);
+    --lunar-shadow-lg: 0 20px 50px rgba(212, 83, 126, 0.15);
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
@@ -100,6 +60,97 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'DM Sans', system-ui, sans-serif;
+  }
+
+  h1, h2, h3, .font-serif {
+    font-family: 'Noto Serif SC', serif;
+  }
+}
+
+@layer components {
+  .lunar-container {
+    @apply min-h-screen flex justify-center;
+    background: hsl(var(--lunar-bg));
+  }
+
+  .lunar-phone {
+    @apply w-full max-w-[420px] min-h-screen flex flex-col relative overflow-hidden;
+    background: hsl(var(--lunar-surface));
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+  }
+
+  .lunar-btn-primary {
+    @apply w-full py-4 rounded-2xl font-semibold transition-all flex items-center justify-center gap-2;
+    background: hsl(var(--lunar-pink));
+    color: white;
+    box-shadow: 0 8px 24px rgba(212, 83, 126, 0.25);
+  }
+
+  .lunar-btn-primary:active {
+    transform: scale(0.98);
+  }
+
+  .lunar-btn-primary:disabled {
+    @apply bg-muted text-muted-foreground shadow-none;
+  }
+
+  .lunar-btn-secondary {
+    @apply w-full py-4 rounded-2xl font-semibold transition-all flex items-center justify-center gap-2 border-2;
+    border-color: hsl(var(--lunar-pink));
+    color: hsl(var(--lunar-pink));
+    background: transparent;
+  }
+
+  .lunar-btn-secondary:active {
+    transform: scale(0.98);
+  }
+
+  .lunar-badge-hk {
+    @apply px-3 py-1 text-xs rounded-full font-bold;
+    background: hsl(var(--lunar-purple) / 0.1);
+    color: hsl(var(--lunar-purple));
+  }
+
+  .lunar-badge-sz {
+    @apply px-3 py-1 text-xs rounded-full font-bold;
+    background: hsl(var(--lunar-teal) / 0.1);
+    color: hsl(var(--lunar-teal));
+  }
+
+  .lunar-input {
+    @apply w-full p-4 rounded-2xl outline-none transition-all;
+    background: hsl(var(--muted));
+    border: 2px solid transparent;
+  }
+
+  .lunar-input:focus {
+    border-color: hsl(var(--lunar-pink));
+    box-shadow: 0 0 0 3px hsl(var(--lunar-pink) / 0.1);
+  }
+
+  .lunar-tag-match {
+    @apply px-3 py-1.5 rounded-xl text-xs font-bold;
+    background: hsl(var(--lunar-pink) / 0.1);
+    color: hsl(var(--lunar-pink));
+  }
+
+  .lunar-tag-neutral {
+    @apply px-3 py-1.5 rounded-xl text-xs font-bold bg-muted text-muted-foreground;
+  }
+
+  .lunar-option {
+    @apply w-full p-5 rounded-2xl text-left font-medium transition-all border-2;
+    border-color: hsl(var(--muted));
+    background: hsl(var(--muted));
+    color: hsl(var(--muted-foreground));
+  }
+
+  .lunar-option-selected {
+    @apply w-full p-5 rounded-2xl text-left font-medium transition-all border-2;
+    border-color: hsl(var(--lunar-pink));
+    background: hsl(var(--lunar-pink) / 0.05);
+    color: hsl(var(--lunar-pink));
   }
 }
