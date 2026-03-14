@@ -22,7 +22,7 @@ const Landing: React.FC = () => {
           🌛
         </motion.div>
 
-        <h1 className="font-serif text-3xl font-bold text-primary mb-2">月亮</h1>
+        <h1 className="font-serif text-3xl font-bold text-primary mb-2">月亮 🌙</h1>
         <p className="text-muted-foreground font-medium mb-8">不刷脸，不内卷，帮你找对的人</p>
 
         <div className="bg-secondary/50 rounded-3xl p-6 w-full mb-8">
