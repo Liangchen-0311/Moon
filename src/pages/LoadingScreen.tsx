@@ -12,19 +12,13 @@ const LoadingScreen: React.FC = () => {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setStep((s) => {
-        if (s >= STEPS.length) {
-          clearInterval(timer);
-          return s;
-        }
-        return s + 1;
-      });
+      setStep((s) => s + 1);
     }, 700);
     return () => clearInterval(timer);
   }, []);
 
   useEffect(() => {
-    if (step > STEPS.length) {
+    if (step >= STEPS.length) {
       const timeout = setTimeout(() => navigate("/result"), 800);
       return () => clearTimeout(timeout);
     }
@@ -39,7 +33,7 @@ const LoadingScreen: React.FC = () => {
           className="w-16 h-16 border-4 border-secondary border-t-primary rounded-full mb-8"
         />
         <h2 className="font-serif text-2xl font-bold mb-2 text-foreground">AI 正在为你匹配</h2>
-        <p className="text-muted-foreground mb-12">分析你在 7 所高校中的最佳缘分</p>
+        <p className="text-muted-foreground mb-12">分析你在 19 所高校中的最佳缘分</p>
 
         <div className="space-y-4 w-full max-w-[240px]">
           {STEPS.map((s, i) => (
