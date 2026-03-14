@@ -1,15 +1,16 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Home, ClipboardCheck, Heart, User } from "lucide-react";
+import { Home, ClipboardCheck, Heart, Target, User } from "lucide-react";
 
 const BottomNav: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const navs = [
     { icon: Home, label: "首页", path: "/" },
-    { icon: ClipboardCheck, label: "我的测评", path: "/quiz" },
-    { icon: Heart, label: "匹配结果", path: "/result" },
-    { icon: User, label: "我的资料", path: "#" },
+    { icon: ClipboardCheck, label: "测评", path: "/quiz" },
+    { icon: Target, label: "心动", path: "/shoot" },
+    { icon: Heart, label: "匹配", path: "/result" },
+    { icon: User, label: "我的", path: "#" },
   ];
 
   return (
