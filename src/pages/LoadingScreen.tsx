@@ -12,19 +12,13 @@ const LoadingScreen: React.FC = () => {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setStep((s) => {
-        if (s >= STEPS.length) {
-          clearInterval(timer);
-          return s;
-        }
-        return s + 1;
-      });
+      setStep((s) => s + 1);
     }, 700);
     return () => clearInterval(timer);
   }, []);
 
   useEffect(() => {
-    if (step > STEPS.length) {
+    if (step >= STEPS.length) {
       const timeout = setTimeout(() => navigate("/result"), 800);
       return () => clearTimeout(timeout);
     }
