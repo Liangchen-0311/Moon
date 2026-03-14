@@ -8,6 +8,7 @@ import Onboarding from "./pages/Onboarding";
 import Quiz from "./pages/Quiz";
 import LoadingScreen from "./pages/LoadingScreen";
 import Result from "./pages/Result";
+import ShootYourShot from "./pages/ShootYourShot";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
