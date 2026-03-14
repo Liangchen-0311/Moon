@@ -103,11 +103,14 @@ const Onboarding: React.FC = () => {
 
             <button
               className="lunar-btn-primary"
-              disabled={!isEmailValid}
+              disabled={!isEmailValid || nickname.length < 2}
               onClick={() => setStep(2)}
             >
               发送验证码
             </button>
+            <p className="text-xs text-muted-foreground text-center mt-2">
+              ⚠️ 目前为演示模式，验证码无需真实接收，任意填写6位数字即可
+            </p>
           </motion.div>
         ) : (
           <motion.div

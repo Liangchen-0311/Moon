@@ -47,7 +47,7 @@ const Result: React.FC = () => {
             <h2 className="font-serif text-6xl font-bold text-primary">{MATCH.score}</h2>
             <span className="font-serif text-2xl font-bold text-primary">%</span>
           </div>
-          <p className="text-muted-foreground text-sm mt-1">兼容度 · 基于10维性格模型</p>
+          <p className="text-muted-foreground text-sm mt-1">兼容度 · 基于15维性格模型</p>
         </div>
 
         {/* Match Card */}
