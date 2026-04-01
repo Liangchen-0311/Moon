@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { CheckCircle2, Mail, ArrowLeft, ShieldCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import AppShell from "@/components/AppShell";
-import { supabase } from "@/integrations/supabase/client";
+import { supabaseAuth } from "@/integrations/supabase/auth-client";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 
 const SCHOOL_EMAIL_REGEX =
