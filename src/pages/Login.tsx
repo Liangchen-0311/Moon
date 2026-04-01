@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { CheckCircle2, Mail, ArrowLeft, ShieldCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import AppShell from "@/components/AppShell";
-import { supabase } from "@/integrations/supabase/client";
+import { supabaseAuth } from "@/integrations/supabase/auth-client";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 
 const SCHOOL_EMAIL_REGEX =
@@ -24,7 +24,7 @@ const Login: React.FC = () => {
     setLoading(true);
     setError("");
 
-    const { error } = await supabase.auth.signInWithOtp({
+    const { error } = await supabaseAuth.auth.signInWithOtp({
       email,
       options: {
         shouldCreateUser: true,
@@ -44,7 +44,7 @@ const Login: React.FC = () => {
     setLoading(true);
     setError("");
 
-    const { error } = await supabase.auth.verifyOtp({
+    const { error } = await supabaseAuth.auth.verifyOtp({
       email,
       token,
       type: "email",
