@@ -19,7 +19,7 @@ const Landing: React.FC = () => {
           transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
           className="text-5xl mb-4"
         >
-          🌛
+          🌙
         </motion.div>
 
         <h1 className="font-serif text-3xl font-bold text-primary mb-2">月亮 🌙</h1>

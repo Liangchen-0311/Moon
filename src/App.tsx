@@ -27,6 +27,7 @@ const App = () => (
           <Route path="/loading" element={<LoadingScreen />} />
           <Route path="/result" element={<Result />} />
           <Route path="/shoot" element={<ShootYourShot />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
