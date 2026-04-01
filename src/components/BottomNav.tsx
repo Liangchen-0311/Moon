@@ -10,7 +10,7 @@ const BottomNav: React.FC = () => {
     { icon: ClipboardCheck, label: "测评", path: "/quiz" },
     { icon: Target, label: "心动", path: "/shoot" },
     { icon: Heart, label: "匹配", path: "/result" },
-    { icon: User, label: "我的", path: "#" },
+    { icon: User, label: "我的", path: "/profile" },
   ];
 
   return (

@@ -9,6 +9,7 @@ import Quiz from "./pages/Quiz";
 import LoadingScreen from "./pages/LoadingScreen";
 import Result from "./pages/Result";
 import ShootYourShot from "./pages/ShootYourShot";
+import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/loading" element={<LoadingScreen />} />
           <Route path="/result" element={<Result />} />
           <Route path="/shoot" element={<ShootYourShot />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
