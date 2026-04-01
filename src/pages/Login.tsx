@@ -24,7 +24,7 @@ const Login: React.FC = () => {
     setLoading(true);
     setError("");
 
-    const { error } = await supabase.auth.signInWithOtp({
+    const { error } = await supabaseAuth.auth.signInWithOtp({
       email,
       options: {
         shouldCreateUser: true,
