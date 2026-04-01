@@ -44,7 +44,7 @@ const Login: React.FC = () => {
     setLoading(true);
     setError("");
 
-    const { error } = await supabase.auth.verifyOtp({
+    const { error } = await supabaseAuth.auth.verifyOtp({
       email,
       token,
       type: "email",
