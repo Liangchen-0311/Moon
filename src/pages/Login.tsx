@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { motion } from "framer-motion";
-import { CheckCircle2, Mail, ArrowLeft } from "lucide-react";
+import { CheckCircle2, Mail, ArrowLeft, ShieldCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import AppShell from "@/components/AppShell";
 import { supabase } from "@/integrations/supabase/client";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 
 const SCHOOL_EMAIL_REGEX =
   /^[a-zA-Z0-9._%+-]+@.*(hku\.hk|ust\.hk|cuhk\.edu\.hk|polyu\.edu\.hk|edu\.hk|sustech\.edu\.cn|szu\.edu\.cn)$/i;
@@ -11,29 +12,44 @@ const SCHOOL_EMAIL_REGEX =
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
-  const [sent, setSent] = useState(false);
+  const [step, setStep] = useState<"email" | "otp">("email");
+  const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const isEmailValid = SCHOOL_EMAIL_REGEX.test(email);
 
-  const handleSendLink = async () => {
+  const handleSendOtp = async () => {
     if (!isEmailValid) return;
     setLoading(true);
     setError("");
 
-    const { error } = await supabase.auth.signInWithOtp({
+    const { error } = await supabase.auth.signInWithOtp({ email });
+
+    setLoading(false);
+    if (error) {
+      setError(error.message);
+    } else {
+      setStep("otp");
+    }
+  };
+
+  const handleVerifyOtp = async (token: string) => {
+    if (token.length !== 6) return;
+    setLoading(true);
+    setError("");
+
+    const { error } = await supabase.auth.verifyOtp({
       email,
-      options: {
-        emailRedirectTo: window.location.origin,
-      },
+      token,
+      type: "email",
     });
 
     setLoading(false);
     if (error) {
       setError(error.message);
     } else {
-      setSent(true);
+      navigate("/onboarding");
     }
   };
 
@@ -41,10 +57,10 @@ const Login: React.FC = () => {
     <AppShell>
       <div className="p-8 pt-12">
         <button
-          onClick={() => navigate("/")}
+          onClick={() => step === "otp" ? setStep("email") : navigate("/")}
           className="flex items-center gap-1 text-muted-foreground text-sm mb-8 hover:text-foreground transition-colors"
         >
-          <ArrowLeft size={16} /> 返回首页
+          <ArrowLeft size={16} /> {step === "otp" ? "修改邮箱" : "返回首页"}
         </button>
 
         <div className="text-center mb-10">
@@ -56,16 +72,16 @@ const Login: React.FC = () => {
             🌙
           </motion.div>
           <h1 className="font-serif text-2xl font-bold text-foreground mb-2">
-            {sent ? "查看你的邮箱 📬" : "用学校邮箱登录"}
+            {step === "otp" ? "输入验证码" : "用学校邮箱登录"}
           </h1>
           <p className="text-muted-foreground text-sm">
-            {sent
-              ? "我们已发送 Magic Link 到你的邮箱，点击链接即可登录"
-              : "无需密码，我们会发送登录链接到你的学校邮箱"}
+            {step === "otp"
+              ? `验证码已发送到 ${email}`
+              : "无需密码，我们会发送 6 位验证码到你的学校邮箱"}
           </p>
         </div>
 
-        {!sent ? (
+        {step === "email" ? (
           <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -82,7 +98,7 @@ const Login: React.FC = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="yourname@connect.hku.hk"
                   className="lunar-input"
-                  onKeyDown={(e) => e.key === "Enter" && handleSendLink()}
+                  onKeyDown={(e) => e.key === "Enter" && handleSendOtp()}
                 />
                 {isEmailValid && (
                   <CheckCircle2
@@ -101,7 +117,7 @@ const Login: React.FC = () => {
             <button
               className="lunar-btn-primary"
               disabled={!isEmailValid || loading}
-              onClick={handleSendLink}
+              onClick={handleSendOtp}
             >
               {loading ? (
                 <span className="flex items-center gap-2">
@@ -110,7 +126,7 @@ const Login: React.FC = () => {
                 </span>
               ) : (
                 <>
-                  <Mail size={16} /> 发送登录链接
+                  <Mail size={16} /> 发送验证码
                 </>
               )}
             </button>
@@ -123,23 +139,47 @@ const Login: React.FC = () => {
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="text-center space-y-6"
+            className="space-y-6 flex flex-col items-center"
           >
-            <div className="w-20 h-20 bg-secondary rounded-full flex items-center justify-center mx-auto">
-              <Mail className="text-primary" size={32} />
+            <div className="w-16 h-16 bg-secondary rounded-full flex items-center justify-center">
+              <ShieldCheck className="text-primary" size={28} />
             </div>
-            <div className="space-y-2">
-              <p className="text-sm text-foreground font-medium">{email}</p>
-              <p className="text-xs text-muted-foreground">
-                没收到？检查垃圾邮件文件夹，或
-                <button
-                  onClick={() => { setSent(false); setError(""); }}
-                  className="text-primary font-medium ml-1"
-                >
-                  重新发送
-                </button>
-              </p>
-            </div>
+
+            <InputOTP
+              maxLength={6}
+              value={otp}
+              onChange={(value) => {
+                setOtp(value);
+                if (value.length === 6) handleVerifyOtp(value);
+              }}
+            >
+              <InputOTPGroup>
+                <InputOTPSlot index={0} />
+                <InputOTPSlot index={1} />
+                <InputOTPSlot index={2} />
+                <InputOTPSlot index={3} />
+                <InputOTPSlot index={4} />
+                <InputOTPSlot index={5} />
+              </InputOTPGroup>
+            </InputOTP>
+
+            {error && (
+              <p className="text-sm text-destructive text-center">{error}</p>
+            )}
+
+            {loading && (
+              <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+            )}
+
+            <p className="text-xs text-muted-foreground text-center">
+              没收到？检查垃圾邮件文件夹，或
+              <button
+                onClick={() => { setOtp(""); setError(""); handleSendOtp(); }}
+                className="text-primary font-medium ml-1"
+              >
+                重新发送
+              </button>
+            </p>
           </motion.div>
         )}
       </div>
