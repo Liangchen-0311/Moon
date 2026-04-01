@@ -40,7 +40,7 @@ const Login: React.FC = () => {
   };
 
   const handleVerifyOtp = async (token: string) => {
-    if (token.length !== 6) return;
+    if (token.length !== 8) return;
     setLoading(true);
     setError("");
 
