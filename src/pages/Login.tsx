@@ -151,11 +151,11 @@ const Login: React.FC = () => {
             </div>
 
             <InputOTP
-              maxLength={6}
+              maxLength={8}
               value={otp}
               onChange={(value) => {
                 setOtp(value);
-                if (value.length === 6) handleVerifyOtp(value);
+                if (value.length === 8) handleVerifyOtp(value);
               }}
             >
               <InputOTPGroup>
@@ -165,6 +165,8 @@ const Login: React.FC = () => {
                 <InputOTPSlot index={3} />
                 <InputOTPSlot index={4} />
                 <InputOTPSlot index={5} />
+                <InputOTPSlot index={6} />
+                <InputOTPSlot index={7} />
               </InputOTPGroup>
             </InputOTP>
 
