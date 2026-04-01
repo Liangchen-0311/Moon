@@ -1,74 +1,91 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { User, Mail, RefreshCw } from "lucide-react";
+import { User, Mail, RefreshCw, LogOut } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import AppShell from "@/components/AppShell";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Profile: React.FC = () => {
-  const nickname = localStorage.getItem("user_nickname") || "未设置";
-  const email = localStorage.getItem("user_email") || "未验证";
-  const gender = localStorage.getItem("user_gender") || "未设置";
-  const targetGender = localStorage.getItem("user_target") || "未设置";
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
 
   const [optIn, setOptIn] = useState(true);
+  const [nickname, setNickname] = useState("未设置");
+  const [gender, setGender] = useState("未设置");
+  const [targetGender, setTargetGender] = useState("未设置");
   const [loading, setLoading] = useState(false);
-  const [userId, setUserId] = useState<string | null>(null);
+  const [profileLoading, setProfileLoading] = useState(true);
 
   useEffect(() => {
+    if (!user) return;
     const loadProfile = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        setUserId(user.id);
-        const { data } = await supabase
-          .from("users")
-          .select("opt_in")
-          .eq("user_id", user.id)
-          .maybeSingle();
-        if (data) {
-          setOptIn(data.opt_in);
-        }
+      const { data } = await supabase
+        .from("users")
+        .select("opt_in, nickname, gender, target_gender")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+      if (data) {
+        setOptIn(data.opt_in);
+        if (data.nickname) setNickname(data.nickname);
+        if (data.gender) setGender(data.gender);
+        if (data.target_gender) setTargetGender(data.target_gender);
       }
+      setProfileLoading(false);
     };
     loadProfile();
-  }, []);
+  }, [user]);
 
   const handleOptInToggle = async (checked: boolean) => {
+    if (!user) return;
     setOptIn(checked);
-    if (!userId) return;
     setLoading(true);
     try {
       const { data: existing } = await supabase
         .from("users")
         .select("id")
-        .eq("user_id", userId)
+        .eq("user_id", user.id)
         .maybeSingle();
 
       if (existing) {
         await supabase
           .from("users")
           .update({ opt_in: checked })
-          .eq("user_id", userId);
+          .eq("user_id", user.id);
       } else {
         await supabase
           .from("users")
           .insert({
-            user_id: userId,
+            user_id: user.id,
             opt_in: checked,
-            email: email !== "未验证" ? email : null,
-            nickname: nickname !== "未设置" ? nickname : null,
-            gender: gender !== "未设置" ? gender : null,
-            target_gender: targetGender !== "未设置" ? targetGender : null,
+            email: user.email,
           });
       }
     } catch (err) {
       console.error("Failed to update opt_in:", err);
-      setOptIn(!checked); // revert
+      setOptIn(!checked);
     } finally {
       setLoading(false);
     }
   };
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/");
+  };
+
+  if (profileLoading) {
+    return (
+      <AppShell showNav>
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="w-10 h-10 border-4 border-secondary border-t-primary rounded-full animate-spin" />
+        </div>
+      </AppShell>
+    );
+  }
 
   return (
     <AppShell showNav>
@@ -85,7 +102,7 @@ const Profile: React.FC = () => {
           </motion.div>
           <h1 className="font-serif text-2xl font-bold text-foreground">{nickname}</h1>
           <p className="text-muted-foreground text-sm mt-1 flex items-center justify-center gap-1">
-            <Mail size={14} /> {email}
+            <Mail size={14} /> {user?.email || "未验证"}
           </p>
         </div>
 
@@ -127,17 +144,23 @@ const Profile: React.FC = () => {
             className="lunar-btn-secondary flex items-center justify-center gap-2"
             onClick={() => {
               localStorage.removeItem("quiz_answers");
-              window.location.href = "/quiz";
+              navigate("/quiz");
             }}
           >
             <RefreshCw size={16} /> 重新测评
+          </button>
+          <button
+            className="w-full py-4 rounded-2xl font-semibold text-destructive border-2 border-destructive/20 flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
+            onClick={handleSignOut}
+          >
+            <LogOut size={16} /> 退出登录
           </button>
         </div>
 
         {/* App info */}
         <div className="mt-12 text-center">
           <p className="text-2xl mb-1">🌙</p>
-          <p className="text-xs text-muted-foreground">月亮 🌙 · v1.0 Demo</p>
+          <p className="text-xs text-muted-foreground">月亮 🌙 · v1.0</p>
         </div>
       </div>
     </AppShell>

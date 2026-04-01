@@ -3,7 +3,10 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { AuthProvider } from "@/contexts/AuthContext";
+import ProtectedRoute from "@/components/ProtectedRoute";
 import Landing from "./pages/Landing";
+import Login from "./pages/Login";
 import Onboarding from "./pages/Onboarding";
 import Quiz from "./pages/Quiz";
 import LoadingScreen from "./pages/LoadingScreen";
@@ -16,22 +19,25 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/onboarding" element={<Onboarding />} />
-          <Route path="/quiz" element={<Quiz />} />
-          <Route path="/loading" element={<LoadingScreen />} />
-          <Route path="/result" element={<Result />} />
-          <Route path="/shoot" element={<ShootYourShot />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
+    <AuthProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Landing />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
+            <Route path="/quiz" element={<ProtectedRoute><Quiz /></ProtectedRoute>} />
+            <Route path="/loading" element={<ProtectedRoute><LoadingScreen /></ProtectedRoute>} />
+            <Route path="/result" element={<ProtectedRoute><Result /></ProtectedRoute>} />
+            <Route path="/shoot" element={<ProtectedRoute><ShootYourShot /></ProtectedRoute>} />
+            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </AuthProvider>
   </QueryClientProvider>
 );
 

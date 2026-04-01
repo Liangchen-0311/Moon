@@ -55,7 +55,7 @@ const Landing: React.FC = () => {
           </div>
         </div>
 
-        <button className="lunar-btn-primary" onClick={() => navigate("/onboarding")}>
+        <button className="lunar-btn-primary" onClick={() => navigate("/login")}>
           开始匹配测评 <ArrowRight size={18} />
         </button>
         <p className="mt-6 text-xs text-muted-foreground">需要学生邮箱验证 · 完全匿名</p>
