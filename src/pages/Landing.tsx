@@ -78,9 +78,9 @@ const Landing: React.FC = () => {
       const weekStart = getWeekStart();
 
       const [{ data: quizRow }, { data: userRow }, { count }] = await Promise.all([
-        supabase.from("quiz_answers").select("user_id").eq("user_id", authUser.id).maybeSingle(),
-        supabase.from("users").select("id, nickname, profile_summary").eq("user_id", authUser.id).maybeSingle(),
-        supabase.from("users").select("id", { count: "exact", head: true }).eq("opt_in", true),
+        supabaseAuth.from("quiz_answers").select("user_id").eq("user_id", authUser.id).maybeSingle(),
+        supabaseAuth.from("users").select("id, nickname, profile_summary").eq("user_id", authUser.id).maybeSingle(),
+        supabaseAuth.from("users").select("id", { count: "exact", head: true }).eq("opt_in", true),
       ]);
 
       const completedQuiz = !!quizRow;
