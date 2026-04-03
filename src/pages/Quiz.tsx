@@ -140,8 +140,8 @@ const Quiz: React.FC = () => {
             submitted_at: new Date().toISOString(),
           });
 
-          if (upsertError) {
-            console.error("quiz_answers upsert failed:", JSON.stringify(upsertError));
+          if (insertError) {
+            console.error("quiz_answers insert failed:", JSON.stringify(insertError));
           } else {
             console.log("quiz_answers saved for auth uid:", authUser.id);
             // Then call generate-profile
