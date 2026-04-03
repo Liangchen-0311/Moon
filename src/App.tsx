@@ -26,7 +26,15 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-            <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <Index />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/landing" element={<Landing />} />
             <Route path="/login" element={<Login />} />
             <Route
