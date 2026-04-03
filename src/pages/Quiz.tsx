@@ -57,6 +57,7 @@ const Quiz: React.FC = () => {
             {
               user_id: user.id,
               answers: questionsWithAnswers,
+              submitted_at: new Date().toISOString(),
             },
             { onConflict: "user_id" }
           );
