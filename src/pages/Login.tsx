@@ -57,7 +57,7 @@ const Login: React.FC = () => {
       // Check if returning user (has profile in DB) — AuthContext handles session,
       // we check localStorage for existing quiz as a quick heuristic
       const hasQuiz = localStorage.getItem("quiz_results");
-      navigate(hasQuiz ? "/profile" : "/onboarding");
+      navigate(hasQuiz ? "/match" : "/onboarding");
     }
   };
 

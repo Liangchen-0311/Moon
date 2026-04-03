@@ -11,6 +11,7 @@ import Onboarding from "./pages/Onboarding";
 import Quiz from "./pages/Quiz";
 import MatchPoolConfirmation from "./pages/MatchPoolConfirmation";
 import Result from "./pages/Result";
+import Match from "./pages/Match";
 import ShootYourShot from "./pages/ShootYourShot";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
