@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { CheckCircle2 } from "lucide-react";
 import AppShell from "@/components/AppShell";
-import { supabaseAuth as supabase } from "@/integrations/supabase/auth-client";
+import { supabaseAuth } from "@/integrations/supabase/auth-client";
 import { useAuth } from "@/contexts/AuthContext";
 
 const Onboarding: React.FC = () => {
@@ -18,22 +18,25 @@ const Onboarding: React.FC = () => {
     if (!user || nickname.length < 2) return;
     setSaving(true);
 
-    // Upsert user profile
-    const { data: existing } = await supabase
+    // Get the real auth uid from supabaseAuth
+    const { data: { user: authUser } } = await supabaseAuth.auth.getUser();
+    if (!authUser) return;
+
+    const { data: existing } = await supabaseAuth
       .from("users")
       .select("id")
-      .eq("user_id", user.id)
+      .eq("user_id", authUser.id)
       .maybeSingle();
 
     if (existing) {
-      await supabase
+      await supabaseAuth
         .from("users")
-        .update({ nickname, gender, target_gender: target, email: user.email })
-        .eq("user_id", user.id);
+        .update({ nickname, gender, target_gender: target, email: authUser.email })
+        .eq("user_id", authUser.id);
     } else {
-      await supabase
+      await supabaseAuth
         .from("users")
-        .insert({ user_id: user.id, nickname, gender, target_gender: target, email: user.email });
+        .insert({ user_id: authUser.id, nickname, gender, target_gender: target, email: authUser.email });
     }
 
     // Also store locally for quiz/loading pages
