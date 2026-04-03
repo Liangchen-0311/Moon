@@ -55,6 +55,7 @@ export type Database = {
           id: string
           nickname: string | null
           opt_in: boolean
+          profile_summary: string | null
           target_gender: string | null
           updated_at: string
           user_id: string
@@ -66,6 +67,7 @@ export type Database = {
           id?: string
           nickname?: string | null
           opt_in?: boolean
+          profile_summary?: string | null
           target_gender?: string | null
           updated_at?: string
           user_id: string
@@ -77,6 +79,7 @@ export type Database = {
           id?: string
           nickname?: string | null
           opt_in?: boolean
+          profile_summary?: string | null
           target_gender?: string | null
           updated_at?: string
           user_id?: string
