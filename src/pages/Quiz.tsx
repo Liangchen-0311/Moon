@@ -7,23 +7,97 @@ import { supabaseAuth } from "@/integrations/supabase/auth-client";
 import { useAuth } from "@/contexts/AuthContext";
 
 const QUESTIONS = [
-  { id: 1, icon: "🌙", q: "周末你更可能在做什么？", options: ["宿舍追剧", "跟朋友聚餐", "图书馆学习", "打游戏/搞创作"] },
-  { id: 2, icon: "💬", q: "你刚认识新朋友，你更倾向于？", options: ["快速聊开话题", "慢慢来先观察", "靠段子梗破冰", "直接找共同话题"] },
-  { id: 3, icon: "🗺️", q: "约会地点你更喜欢？", options: ["小众咖啡店/书店", "户外/海边/爬山", "电影或展览", "找好吃的宵夜"] },
-  { id: 4, icon: "😤", q: "争吵之后你一般怎么处理？", options: ["马上面对面解决", "冷静一下再谈", "发文字写清楚", "沉默等对方来找我"] },
-  { id: 5, icon: "🌏", q: "你更希望另一半来自哪里？", options: ["香港本地", "内地(深圳/广州)", "海外华人/国际生", "哪里都好看缘分"] },
-  { id: 6, icon: "📱", q: "你怎么跟喜欢的人联系？", options: ["随时发消息", "有事才联系但通话长", "发表情包/梗图", "喜欢发语音"] },
-  { id: 7, icon: "🎓", q: "毕业后最理想的生活状态？", options: ["留港或去大城市", "出国读书或工作", "稳定工作好好生活", "创业/做自己想做的"] },
-  { id: 8, icon: "❤️", q: "感情中最重要的是？", options: ["三观和思维方式一致", "能互相逗笑有趣", "互相支持陪伴", "有激情和心动感"] },
-  { id: 9, icon: "🌙", q: "你是哪种人？", options: ["早起型早上效率高", "夜猫子深夜才进入状态", "随机看心情", "任何时候都很困"] },
-  { id: 10, icon: "🎭", q: "第一次见面你希望对方怎么做？", options: ["提前规划好带着我走", "随性走着看", "一起商量平等决定", "我来主导就好"] },
-  { id: 11, icon: "🍽️", q: "你对吃的态度是？", options: ["为了好吃愿意排队", "随便吃饱就行", "喜欢自己做饭", "最爱探索新餐厅"] },
-  { id: 12, icon: "🐾", q: "你喜欢养宠物吗？", options: ["猫派！已经有/想养", "狗派！越大只越好", "都喜欢来者不拒", "不太想养怕麻烦"] },
-  { id: 13, icon: "💰", q: "约会的时候费用怎么处理？", options: ["AA制最舒服", "谁约的谁请", "轮流请客", "看情况不纠结"] },
-  { id: 14, icon: "🎵", q: "你最常听什么类型的音乐？", options: ["华语流行/粤语歌", "欧美/K-pop", "独立/民谣/电子", "什么都听看心情"] },
-  { id: 15, icon: "🏠", q: "你的理想居住状态是？", options: ["热闹市中心", "安静郊区有空间", "能走路到海边", "哪里工作就住哪里"] },
+  {
+    id: 1,
+    icon: "🌙",
+    q: "周末你更可能在做什么？",
+    options: ["宿舍追剧", "跟朋友聚餐", "图书馆学习", "打游戏/搞创作"],
+  },
+  {
+    id: 2,
+    icon: "💬",
+    q: "你刚认识新朋友，你更倾向于？",
+    options: ["快速聊开话题", "慢慢来先观察", "靠段子梗破冰", "直接找共同话题"],
+  },
+  {
+    id: 3,
+    icon: "🗺️",
+    q: "约会地点你更喜欢？",
+    options: ["小众咖啡店/书店", "户外/海边/爬山", "电影或展览", "找好吃的宵夜"],
+  },
+  {
+    id: 4,
+    icon: "😤",
+    q: "争吵之后你一般怎么处理？",
+    options: ["马上面对面解决", "冷静一下再谈", "发文字写清楚", "沉默等对方来找我"],
+  },
+  {
+    id: 5,
+    icon: "🌏",
+    q: "你更希望另一半来自哪里？",
+    options: ["香港本地", "内地", "海外华人/国际生", "哪里都好看缘分"],
+  },
+  {
+    id: 6,
+    icon: "📱",
+    q: "你怎么跟喜欢的人联系？",
+    options: ["随时发消息", "有事才联系但通话长", "发表情包/梗图", "喜欢发语音"],
+  },
+  {
+    id: 7,
+    icon: "🎓",
+    q: "毕业后最理想的生活状态？",
+    options: ["留港或去大城市", "出国读书或工作", "稳定工作好好生活", "创业/做自己想做的"],
+  },
+  {
+    id: 8,
+    icon: "❤️",
+    q: "感情中最重要的是？",
+    options: ["三观和思维方式一致", "能互相逗笑有趣", "互相支持陪伴", "有激情和心动感"],
+  },
+  {
+    id: 9,
+    icon: "🌙",
+    q: "你是哪种人？",
+    options: ["早起型早上效率高", "夜猫子深夜才进入状态", "随机看心情", "任何时候都很困"],
+  },
+  {
+    id: 10,
+    icon: "🎭",
+    q: "第一次见面你希望对方怎么做？",
+    options: ["提前规划好带着我走", "随性走着看", "一起商量平等决定", "我来主导就好"],
+  },
+  {
+    id: 11,
+    icon: "🍽️",
+    q: "你对吃的态度是？",
+    options: ["为了好吃愿意排队", "随便吃饱就行", "喜欢自己做饭", "最爱探索新餐厅"],
+  },
+  {
+    id: 12,
+    icon: "🐾",
+    q: "你喜欢养宠物吗？",
+    options: ["猫派！已经有/想养", "狗派！越大只越好", "都喜欢来者不拒", "不太想养怕麻烦"],
+  },
+  {
+    id: 13,
+    icon: "💰",
+    q: "约会的时候费用怎么处理？",
+    options: ["AA制最舒服", "谁约的谁请", "轮流请客", "看情况不纠结"],
+  },
+  {
+    id: 14,
+    icon: "🎵",
+    q: "你最常听什么类型的音乐？",
+    options: ["华语流行/粤语歌", "欧美/K-pop", "独立/民谣/电子", "什么都听看心情"],
+  },
+  {
+    id: 15,
+    icon: "🏠",
+    q: "你的理想居住状态是？",
+    options: ["热闹市中心", "安静郊区有空间", "能走路到海边", "哪里工作就住哪里"],
+  },
 ];
-
 
 const Quiz: React.FC = () => {
   const navigate = useNavigate();
@@ -48,7 +122,9 @@ const Quiz: React.FC = () => {
       if (user) {
         try {
           // Get the real auth uid from supabaseAuth
-          const { data: { user: authUser } } = await supabaseAuth.auth.getUser();
+          const {
+            data: { user: authUser },
+          } = await supabaseAuth.auth.getUser();
           if (!authUser) throw new Error("No auth user");
 
           const questionsWithAnswers = QUESTIONS.map((q, i) => ({
@@ -63,7 +139,7 @@ const Quiz: React.FC = () => {
               answers: questionsWithAnswers,
               submitted_at: new Date().toISOString(),
             },
-            { onConflict: "user_id" }
+            { onConflict: "user_id" },
           );
 
           if (upsertError) {
@@ -71,8 +147,8 @@ const Quiz: React.FC = () => {
           } else {
             console.log("quiz_answers saved for auth uid:", authUser.id);
             // Then call generate-profile
-            const { error: fnError } = await supabaseAuth.functions.invoke('generate-profile', {
-              body: { user_id: authUser.id }
+            const { error: fnError } = await supabaseAuth.functions.invoke("generate-profile", {
+              body: { user_id: authUser.id },
             });
             if (fnError) {
               console.error("generate-profile error:", fnError);
@@ -132,16 +208,8 @@ const Quiz: React.FC = () => {
         </AnimatePresence>
 
         <div className="mt-12">
-          <button
-            className="lunar-btn-primary"
-            disabled={selected === null || saving}
-            onClick={handleNext}
-          >
-            {saving
-              ? "生成画像中…"
-              : current === QUESTIONS.length - 1
-              ? "查看我的匹配 →"
-              : "下一题 →"}
+          <button className="lunar-btn-primary" disabled={selected === null || saving} onClick={handleNext}>
+            {saving ? "生成画像中…" : current === QUESTIONS.length - 1 ? "查看我的匹配 →" : "下一题 →"}
           </button>
         </div>
       </div>
