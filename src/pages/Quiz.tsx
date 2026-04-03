@@ -47,11 +47,26 @@ const Quiz: React.FC = () => {
 
       if (user) {
         try {
+          // Save answers to quiz_answers table first
+          const questionsWithAnswers = QUESTIONS.map((q, i) => ({
+            question: q.q,
+            answer: q.options[newAnswers[i]] || "",
+          }));
+
+          await supabaseAuth.from("quiz_answers").upsert(
+            {
+              user_id: user.id,
+              answers: questionsWithAnswers,
+            },
+            { onConflict: "user_id" }
+          );
+
+          // Then call generate-profile
           await supabaseAuth.functions.invoke('generate-profile', {
             body: { user_id: user.id }
           });
         } catch (err) {
-          console.error("Failed to generate profile:", err);
+          console.error("Failed to save answers or generate profile:", err);
         }
       }
 
