@@ -90,7 +90,7 @@ const Landing: React.FC = () => {
       setPoolCount(count ?? 0);
 
       if (completedQuiz && userRow?.id) {
-        const { data: matchRow } = await supabase
+        const { data: matchRow } = await supabaseAuth
           .from("matches")
           .select("id")
           .or(`user_a.eq.${userRow.id},user_b.eq.${userRow.id}`)
