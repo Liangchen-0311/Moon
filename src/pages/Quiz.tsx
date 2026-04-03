@@ -36,7 +36,7 @@ const Quiz: React.FC = () => {
       setSelected(null);
     } else {
       localStorage.setItem("quiz_results", JSON.stringify(newAnswers));
-      navigate("/loading");
+      navigate("/confirmation");
     }
   };
 

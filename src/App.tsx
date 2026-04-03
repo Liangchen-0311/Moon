@@ -29,7 +29,7 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
             <Route path="/quiz" element={<ProtectedRoute><Quiz /></ProtectedRoute>} />
-            <Route path="/loading" element={<ProtectedRoute><LoadingScreen /></ProtectedRoute>} />
+            <Route path="/confirmation" element={<ProtectedRoute><MatchPoolConfirmation /></ProtectedRoute>} />
             <Route path="/result" element={<ProtectedRoute><Result /></ProtectedRoute>} />
             <Route path="/shoot" element={<ProtectedRoute><ShootYourShot /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
