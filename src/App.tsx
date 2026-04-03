@@ -5,7 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
-
+import Index from "./pages/Index";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Onboarding from "./pages/Onboarding";
@@ -27,6 +27,14 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <Index />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/landing" element={<Landing />} />
             <Route path="/login" element={<Login />} />
             <Route
