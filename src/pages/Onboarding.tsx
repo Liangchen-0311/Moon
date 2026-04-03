@@ -18,28 +18,27 @@ const Onboarding: React.FC = () => {
     if (!user || nickname.length < 2) return;
     setSaving(true);
 
-    // Get the real auth uid from supabaseAuth
     const { data: { user: authUser } } = await supabaseAuth.auth.getUser();
     if (!authUser) return;
 
+    // On user's Supabase, users.id IS the auth uid
     const { data: existing } = await supabaseAuth
       .from("users")
       .select("id")
-      .eq("user_id", authUser.id)
+      .eq("id", authUser.id)
       .maybeSingle();
 
     if (existing) {
       await supabaseAuth
         .from("users")
-        .update({ nickname, gender, target_gender: target, email: authUser.email })
-        .eq("user_id", authUser.id);
+        .update({ nickname, gender, email: authUser.email })
+        .eq("id", authUser.id);
     } else {
       await supabaseAuth
         .from("users")
-        .insert({ user_id: authUser.id, nickname, gender, target_gender: target, email: authUser.email });
+        .insert({ id: authUser.id, nickname, gender, email: authUser.email, opt_in: true });
     }
 
-    // Also store locally for quiz/loading pages
     localStorage.setItem("user_nickname", nickname);
     localStorage.setItem("user_gender", gender);
     localStorage.setItem("user_target", target);

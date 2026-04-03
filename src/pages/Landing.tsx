@@ -78,7 +78,7 @@ const Landing: React.FC = () => {
 
       const [{ data: quizRow }, { data: userRow }, { count }] = await Promise.all([
         supabaseAuth.from("quiz_answers").select("user_id").eq("user_id", authUser.id).maybeSingle(),
-        supabaseAuth.from("users").select("id, nickname, profile_summary").eq("user_id", authUser.id).maybeSingle(),
+        supabaseAuth.from("users").select("id, nickname, profile_summary").eq("id", authUser.id).maybeSingle(),
         supabaseAuth.from("users").select("id", { count: "exact", head: true }).eq("opt_in", true),
       ]);
 
