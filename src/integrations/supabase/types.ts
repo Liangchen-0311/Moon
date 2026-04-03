@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      matches: {
+        Row: {
+          created_at: string
+          id: string
+          match_reason: string | null
+          match_score: number
+          match_type: string
+          user_a: string
+          user_b: string
+          week_of: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          match_reason?: string | null
+          match_score?: number
+          match_type?: string
+          user_a: string
+          user_b: string
+          week_of?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          match_reason?: string | null
+          match_score?: number
+          match_type?: string
+          user_a?: string
+          user_b?: string
+          week_of?: string
+        }
+        Relationships: []
+      }
       users: {
         Row: {
           created_at: string
