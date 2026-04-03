@@ -132,15 +132,13 @@ const Quiz: React.FC = () => {
             answer: q.options[newAnswers[i]] || "",
           }));
 
-          // Write quiz_answers via supabaseAuth (data lives on user's Supabase)
-          const { error: upsertError } = await supabaseAuth.from("quiz_answers").upsert(
-            {
-              user_id: authUser.id,
-              answers: questionsWithAnswers,
-              submitted_at: new Date().toISOString(),
-            },
-            { onConflict: "user_id" },
-          );
+          // Delete existing then insert (no unique constraint on user_id)
+          await supabaseAuth.from("quiz_answers").delete().eq("user_id", authUser.id);
+          const { error: insertError } = await supabaseAuth.from("quiz_answers").insert({
+            user_id: authUser.id,
+            answers: questionsWithAnswers,
+            submitted_at: new Date().toISOString(),
+          });
 
           if (upsertError) {
             console.error("quiz_answers upsert failed:", JSON.stringify(upsertError));
