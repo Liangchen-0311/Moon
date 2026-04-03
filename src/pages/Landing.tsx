@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import AppShell from "@/components/AppShell";
 import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
 import { supabaseAuth } from "@/integrations/supabase/auth-client";
 
 const HK_SCHOOLS = ["HKU", "HKUST", "CUHK", "PolyU", "CityU", "HKBU", "LingU", "EdUHK", "HSUHK", "HKMU"];
