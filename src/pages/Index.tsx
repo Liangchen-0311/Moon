@@ -29,7 +29,7 @@ const Index = () => {
         if (!authUser) return;
 
         // 获取用户信息
-        const { data: userData } = await supabase
+        const { data: userData } = await supabaseAuth
           .from("users")
           .select("nickname, profile_summary")
           .eq("id", authUser.id)
@@ -41,7 +41,7 @@ const Index = () => {
         }
 
         // 检查是否完成问卷
-        const { data: quizData } = await supabase
+        const { data: quizData } = await supabaseAuth
           .from("quiz_answers")
           .select("user_id")
           .eq("user_id", authUser.id)
@@ -50,7 +50,7 @@ const Index = () => {
         setHasQuiz(!!quizData);
 
         // 检查本周是否有匹配
-        const { data: matchData } = await supabase
+        const { data: matchData } = await supabaseAuth
           .from("matches")
           .select("id")
           .or(`user_a.eq.${authUser.id},user_b.eq.${authUser.id}`)
@@ -61,7 +61,10 @@ const Index = () => {
         setHasMatch(!!matchData);
 
         // 匹配池人数
-        const { count } = await supabase.from("users").select("id", { count: "exact", head: true }).eq("opt_in", true);
+        const { count } = await supabaseAuth
+          .from("users")
+          .select("id", { count: "exact", head: true })
+          .eq("opt_in", true);
 
         setPoolCount(count || 0);
       } catch (err) {
