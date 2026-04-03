@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { CheckCircle2 } from "lucide-react";
 import AppShell from "@/components/AppShell";
-import { supabase } from "@/integrations/supabase/client";
+import { supabaseAuth as supabase } from "@/integrations/supabase/auth-client";
 import { useAuth } from "@/contexts/AuthContext";
 
 const Onboarding: React.FC = () => {
