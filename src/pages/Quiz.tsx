@@ -24,39 +24,6 @@ const QUESTIONS = [
   { id: 15, icon: "🏠", q: "你的理想居住状态是？", options: ["热闹市中心", "安静郊区有空间", "能走路到海边", "哪里工作就住哪里"] },
 ];
 
-function generateProfileSummary(answers: number[]): string {
-  const traits: string[] = [];
-
-  // Q1: Weekend activity
-  const q1 = ["享受独处和放松", "热爱社交聚会", "勤奋好学", "富有创造力"][answers[0]] || "";
-  if (q1) traits.push(q1);
-
-  // Q2: Meeting new people
-  const q2 = ["外向开朗", "内敛沉稳", "幽默风趣", "目标明确"][answers[1]] || "";
-  if (q2) traits.push(q2);
-
-  // Q3: Date preference
-  const q3 = ["偏爱安静有格调的约会", "喜欢户外冒险", "注重文化体验", "是个吃货"][answers[2]] || "";
-  if (q3) traits.push(q3);
-
-  // Q4: Conflict resolution
-  const q4 = ["直接坦率", "理性冷静", "善于表达", "比较被动"][answers[3]] || "";
-  if (q4) traits.push(q4);
-
-  // Q8: Most important in relationship
-  const q8 = ["注重三观一致和深度交流", "看重趣味和幽默感", "重视陪伴和支持", "追求激情和心动"][answers[7]] || "";
-  if (q8) traits.push(q8);
-
-  // Q9: Morning/night person
-  const q9 = ["早起型选手", "资深夜猫子", "作息随缘", "永远睡不够"][answers[8]] || "";
-  if (q9) traits.push(q9);
-
-  // Q7: Future plans
-  const q7 = ["向往大城市的快节奏", "有出国计划", "追求稳定生活", "有创业梦想"][answers[6]] || "";
-  if (q7) traits.push(q7);
-
-  return `你是一个${traits.slice(0, 3).join("、")}的人。${traits.slice(3).join("，")}。在感情中，${q8}。`;
-}
 
 const Quiz: React.FC = () => {
   const navigate = useNavigate();
