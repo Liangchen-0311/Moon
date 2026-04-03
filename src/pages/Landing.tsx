@@ -150,7 +150,7 @@ const Landing: React.FC = () => {
             </div>
             {hasWeeklyMatch && (
               <button
-                className="w-full py-3 rounded-2xl font-semibold text-primary-foreground bg-pink-500 flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
+                className="w-full py-3 rounded-2xl font-semibold text-primary-foreground bg-primary flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
                 onClick={() => navigate("/match")}
               >
                 查看匹配 <ArrowRight size={18} />
