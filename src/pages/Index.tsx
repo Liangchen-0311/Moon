@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabaseAuth } from "@/integrations/supabase/auth-client";
-import { supabase } from "@/integrations/supabase/client";
 
 const Index = () => {
   const { user, loading: authLoading } = useAuth();
