@@ -9,7 +9,7 @@ import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Onboarding from "./pages/Onboarding";
 import Quiz from "./pages/Quiz";
-import LoadingScreen from "./pages/LoadingScreen";
+import MatchPoolConfirmation from "./pages/MatchPoolConfirmation";
 import Result from "./pages/Result";
 import ShootYourShot from "./pages/ShootYourShot";
 import Profile from "./pages/Profile";
