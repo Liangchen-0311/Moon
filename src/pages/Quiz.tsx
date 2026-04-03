@@ -47,15 +47,19 @@ const Quiz: React.FC = () => {
 
       if (user) {
         try {
-          // Save answers to quiz_answers table first
+          // Get the real auth uid from supabaseAuth
+          const { data: { user: authUser } } = await supabaseAuth.auth.getUser();
+          if (!authUser) throw new Error("No auth user");
+
           const questionsWithAnswers = QUESTIONS.map((q, i) => ({
             question: q.q,
             answer: q.options[newAnswers[i]] || "",
           }));
 
+          // Write quiz_answers via supabaseAuth (data lives on user's Supabase)
           const { error: upsertError } = await supabaseAuth.from("quiz_answers").upsert(
             {
-              user_id: user.id,
+              user_id: authUser.id,
               answers: questionsWithAnswers,
               submitted_at: new Date().toISOString(),
             },
@@ -65,10 +69,10 @@ const Quiz: React.FC = () => {
           if (upsertError) {
             console.error("quiz_answers upsert failed:", JSON.stringify(upsertError));
           } else {
-            console.log("quiz_answers saved successfully for user:", user.id);
+            console.log("quiz_answers saved for auth uid:", authUser.id);
             // Then call generate-profile
             const { error: fnError } = await supabaseAuth.functions.invoke('generate-profile', {
-              body: { user_id: user.id }
+              body: { user_id: authUser.id }
             });
             if (fnError) {
               console.error("generate-profile error:", fnError);
