@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { supabaseAuth as supabase } from "@/integrations/supabase/auth-client";
+import { supabaseAuth } from "@/integrations/supabase/auth-client";
 import { useAuth } from "@/contexts/AuthContext";
 
 export function useQuizStatus() {
@@ -9,21 +9,38 @@ export function useQuizStatus() {
 
   useEffect(() => {
     if (authLoading) return;
-    if (!user) {
-      setLoading(false);
-      return;
-    }
 
     const check = async () => {
-      const { data } = await supabase
-        .from("users")
-        .select("profile_summary")
-        .eq("user_id", user.id)
+      if (!user) {
+        setHasCompletedQuiz(false);
+        setLoading(false);
+        return;
+      }
+
+      const {
+        data: { user: authUser },
+      } = await supabaseAuth.auth.getUser();
+
+      if (!authUser) {
+        setHasCompletedQuiz(false);
+        setLoading(false);
+        return;
+      }
+
+      const { data, error } = await supabaseAuth
+        .from("quiz_answers")
+        .select("user_id")
+        .eq("user_id", authUser.id)
         .maybeSingle();
 
-      setHasCompletedQuiz(!!data?.profile_summary);
+      if (error) {
+        console.error("Failed to check quiz status:", error);
+      }
+
+      setHasCompletedQuiz(!!data);
       setLoading(false);
     };
+
     check();
   }, [user, authLoading]);
 

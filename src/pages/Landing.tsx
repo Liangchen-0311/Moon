@@ -1,45 +1,110 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import AppShell from "@/components/AppShell";
 import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
+import { supabaseAuth } from "@/integrations/supabase/auth-client";
 
 const HK_SCHOOLS = ["HKU", "HKUST", "CUHK", "PolyU", "CityU", "HKBU", "LingU", "EdUHK", "HSUHK", "HKMU"];
 const SZ_SCHOOLS = ["南科大", "深大", "港中大(深圳)", "清华深圳", "北大深圳", "上海交大深圳", "哈工大深圳", "暨南深圳", "中山大学深圳"];
+
+const getWeekStart = () => {
+  const now = new Date();
+  const currentDay = now.getDay();
+  const offset = currentDay === 0 ? 6 : currentDay - 1;
+  const start = new Date(now);
+  start.setDate(now.getDate() - offset);
+  start.setHours(0, 0, 0, 0);
+  return start.toISOString().slice(0, 10);
+};
 
 const Landing: React.FC = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
   const [checking, setChecking] = useState(true);
   const [hasQuiz, setHasQuiz] = useState(false);
+  const [nickname, setNickname] = useState<string | null>(null);
+  const [profileSummary, setProfileSummary] = useState<string | null>(null);
+  const [hasWeeklyMatch, setHasWeeklyMatch] = useState(false);
+  const [poolCount, setPoolCount] = useState(0);
+
+  const summaryPreview = useMemo(() => {
+    if (!profileSummary) return "完成测评后将生成你的专属性格画像";
+    return profileSummary.length > 80 ? `${profileSummary.slice(0, 80)}...` : profileSummary;
+  }, [profileSummary]);
 
   useEffect(() => {
     if (authLoading) return;
-    if (!user) {
-      setChecking(false);
-      return;
-    }
-    // Check if user has completed quiz (profile_summary exists)
-    const checkProfile = async () => {
-      const { data } = await supabase
-        .from("users")
-        .select("profile_summary")
-        .eq("user_id", user.id)
-        .maybeSingle();
 
-      if (data?.profile_summary) {
-        setHasQuiz(true);
-        navigate("/match", { replace: true });
-      } else if (data) {
-        // Has profile but no quiz
-        setHasQuiz(false);
+    const loadHome = async () => {
+      if (!user) {
+        setChecking(false);
+        return;
       }
+
+      const {
+        data: { user: authUser },
+      } = await supabaseAuth.auth.getUser();
+
+      if (!authUser) {
+        setChecking(false);
+        return;
+      }
+
+      const weekStart = getWeekStart();
+
+      const [{ data: quizRow, error: quizError }, { data: userRow, error: userError }, { count, error: countError }] = await Promise.all([
+        supabaseAuth
+          .from("quiz_answers")
+          .select("user_id")
+          .eq("user_id", authUser.id)
+          .maybeSingle(),
+        supabaseAuth
+          .from("users")
+          .select("id, nickname, profile_summary")
+          .eq("user_id", authUser.id)
+          .maybeSingle(),
+        supabaseAuth
+          .from("users")
+          .select("id", { count: "exact", head: true })
+          .eq("opt_in", true),
+      ]);
+
+      if (quizError) console.error("Failed to load quiz status:", quizError);
+      if (userError) console.error("Failed to load profile:", userError);
+      if (countError) console.error("Failed to load pool count:", countError);
+
+      const completedQuiz = !!quizRow;
+      setHasQuiz(completedQuiz);
+      setNickname(userRow?.nickname ?? null);
+      setProfileSummary(userRow?.profile_summary ?? null);
+      setPoolCount(count ?? 0);
+
+      if (completedQuiz && userRow?.id) {
+        const { data: matchRow, error: matchError } = await supabaseAuth
+          .from("matches")
+          .select("id")
+          .or(`user_a.eq.${userRow.id},user_b.eq.${userRow.id}`)
+          .gte("week_of", weekStart)
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+
+        if (matchError) {
+          console.error("Failed to load weekly match status:", matchError);
+        }
+
+        setHasWeeklyMatch(!!matchRow);
+      } else {
+        setHasWeeklyMatch(false);
+      }
+
       setChecking(false);
     };
-    checkProfile();
-  }, [user, authLoading, navigate]);
+
+    loadHome();
+  }, [user, authLoading]);
 
   if (authLoading || checking) {
     return (
@@ -51,7 +116,57 @@ const Landing: React.FC = () => {
     );
   }
 
-  // Logged in but hasn't completed quiz
+  if (user && hasQuiz) {
+    return (
+      <AppShell showNav>
+        <div className="p-6 pt-10 space-y-5">
+          <motion.div
+            initial={{ y: 16, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+            className="space-y-2"
+          >
+            <p className="text-xs font-bold uppercase tracking-[0.24em] text-muted-foreground">月亮 🌙</p>
+            <h1 className="font-serif text-3xl font-bold text-foreground">
+              {nickname ? `Hi, ${nickname} 🌙` : "Hi there 🌙"}
+            </h1>
+            <p className="text-sm text-muted-foreground">欢迎回来，看看这周的进展。</p>
+          </motion.div>
+
+          <div className="rounded-3xl border border-border bg-card p-5 space-y-4">
+            <div className="space-y-1">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">本周匹配状态</p>
+              <h2 className="text-xl font-semibold text-foreground">
+                {hasWeeklyMatch ? "你的本周匹配已揭晓！" : "下一次匹配：周三晚 8 点"}
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                {hasWeeklyMatch ? "去看看系统为你准备的匿名匹配结果。" : "保持开启参加匹配，我们会在每周三晚为你更新结果。"}
+              </p>
+            </div>
+            {hasWeeklyMatch && (
+              <button className="lunar-btn-primary" onClick={() => navigate("/match")}>
+                查看匹配 <ArrowRight size={18} />
+              </button>
+            )}
+          </div>
+
+          <button
+            onClick={() => navigate("/profile")}
+            className="w-full rounded-3xl border border-border bg-secondary/40 p-5 text-left transition-transform active:scale-[0.99]"
+          >
+            <div className="space-y-2">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">你的性格画像 ✨</p>
+              <p className="text-sm leading-relaxed text-foreground">{summaryPreview}</p>
+              <p className="text-xs font-medium text-primary">点击查看完整版</p>
+            </div>
+          </button>
+
+          <p className="pt-1 text-center text-xs text-muted-foreground">已有 {poolCount} 人加入匹配池</p>
+        </div>
+      </AppShell>
+    );
+  }
+
   if (user && !hasQuiz) {
     return (
       <AppShell showNav>
@@ -70,7 +185,7 @@ const Landing: React.FC = () => {
             <div className="p-5 rounded-2xl bg-muted text-left space-y-2">
               <p className="text-sm font-semibold text-foreground">📝 你还没有完成性格测评</p>
               <p className="text-xs text-muted-foreground">
-                完成 15 道趣味问题，AI 将为你生成专属性格画像，并每周三为你匹配最合适的人
+                完成 15 道趣味问题后，我们会为你生成专属性格画像，并加入每周匹配。
               </p>
             </div>
             <button className="lunar-btn-primary" onClick={() => navigate("/quiz")}>
@@ -82,7 +197,6 @@ const Landing: React.FC = () => {
     );
   }
 
-  // Not logged in — show landing
   return (
     <AppShell>
       <div className="p-8 pt-16 flex flex-col items-center text-center">
