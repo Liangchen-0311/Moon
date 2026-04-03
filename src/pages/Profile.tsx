@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { User, Mail, RefreshCw, LogOut } from "lucide-react";
+import { User, Mail, RefreshCw, LogOut, Sparkles } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import AppShell from "@/components/AppShell";
@@ -16,6 +16,7 @@ const Profile: React.FC = () => {
   const [nickname, setNickname] = useState("未设置");
   const [gender, setGender] = useState("未设置");
   const [targetGender, setTargetGender] = useState("未设置");
+  const [profileSummary, setProfileSummary] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [profileLoading, setProfileLoading] = useState(true);
 
@@ -24,7 +25,7 @@ const Profile: React.FC = () => {
     const loadProfile = async () => {
       const { data } = await supabase
         .from("users")
-        .select("opt_in, nickname, gender, target_gender")
+        .select("opt_in, nickname, gender, target_gender, profile_summary")
         .eq("user_id", user.id)
         .maybeSingle();
 
@@ -33,6 +34,7 @@ const Profile: React.FC = () => {
         if (data.nickname) setNickname(data.nickname);
         if (data.gender) setGender(data.gender);
         if (data.target_gender) setTargetGender(data.target_gender);
+        setProfileSummary(data.profile_summary);
       }
       setProfileLoading(false);
     };
@@ -72,6 +74,18 @@ const Profile: React.FC = () => {
     }
   };
 
+  const handleRetakeQuiz = async () => {
+    if (user) {
+      // Clear profile_summary so quiz status resets
+      await supabase
+        .from("users")
+        .update({ profile_summary: null })
+        .eq("user_id", user.id);
+    }
+    localStorage.removeItem("quiz_results");
+    navigate("/quiz");
+  };
+
   const handleSignOut = async () => {
     await signOut();
     navigate("/");
@@ -105,6 +119,17 @@ const Profile: React.FC = () => {
             <Mail size={14} /> {user?.email || "未验证"}
           </p>
         </div>
+
+        {/* Profile Summary */}
+        {profileSummary && (
+          <div className="mb-6 p-5 rounded-2xl bg-secondary/50 border border-border">
+            <div className="flex items-center gap-2 mb-3">
+              <Sparkles size={16} className="text-primary" />
+              <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">我的性格画像</span>
+            </div>
+            <p className="text-sm text-foreground leading-relaxed">{profileSummary}</p>
+          </div>
+        )}
 
         {/* Info Cards */}
         <div className="space-y-3 mb-8">
@@ -142,10 +167,7 @@ const Profile: React.FC = () => {
         <div className="space-y-3">
           <button
             className="lunar-btn-secondary flex items-center justify-center gap-2"
-            onClick={() => {
-              localStorage.removeItem("quiz_answers");
-              navigate("/quiz");
-            }}
+            onClick={handleRetakeQuiz}
           >
             <RefreshCw size={16} /> 重新测评
           </button>
