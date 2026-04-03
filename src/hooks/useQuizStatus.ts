@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabaseAuth as supabase } from "@/integrations/supabase/auth-client";
 import { useAuth } from "@/contexts/AuthContext";
 
 export function useQuizStatus() {

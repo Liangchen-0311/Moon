@@ -4,7 +4,7 @@ import { User, Mail, RefreshCw, LogOut, Sparkles } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import AppShell from "@/components/AppShell";
-import { supabase } from "@/integrations/supabase/client";
+import { supabaseAuth as supabase } from "@/integrations/supabase/auth-client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
