@@ -26,15 +26,72 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Landing />} />
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <Index />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/landing" element={<Landing />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
-            <Route path="/quiz" element={<ProtectedRoute><Quiz /></ProtectedRoute>} />
-            <Route path="/confirmation" element={<ProtectedRoute><MatchPoolConfirmation /></ProtectedRoute>} />
-            <Route path="/result" element={<ProtectedRoute><Result /></ProtectedRoute>} />
-            <Route path="/match" element={<ProtectedRoute><Match /></ProtectedRoute>} />
-            <Route path="/shoot" element={<ProtectedRoute><ShootYourShot /></ProtectedRoute>} />
-            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+            <Route
+              path="/onboarding"
+              element={
+                <ProtectedRoute>
+                  <Onboarding />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/quiz"
+              element={
+                <ProtectedRoute>
+                  <Quiz />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/confirmation"
+              element={
+                <ProtectedRoute>
+                  <MatchPoolConfirmation />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/result"
+              element={
+                <ProtectedRoute>
+                  <Result />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/match"
+              element={
+                <ProtectedRoute>
+                  <Match />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/shoot"
+              element={
+                <ProtectedRoute>
+                  <ShootYourShot />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
