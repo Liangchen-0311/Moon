@@ -42,16 +42,17 @@ const Quiz: React.FC = () => {
       setCurrent(current + 1);
       setSelected(null);
     } else {
-      // Quiz complete — generate summary and save
       setSaving(true);
-      const summary = generateProfileSummary(newAnswers);
       localStorage.setItem("quiz_results", JSON.stringify(newAnswers));
 
       if (user) {
-        await supabase
-          .from("users")
-          .update({ profile_summary: summary })
-          .eq("user_id", user.id);
+        try {
+          await supabaseAuth.functions.invoke('generate-profile', {
+            body: { user_id: user.id }
+          });
+        } catch (err) {
+          console.error("Failed to generate profile:", err);
+        }
       }
 
       setSaving(false);
