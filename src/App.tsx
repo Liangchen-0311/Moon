@@ -11,6 +11,7 @@ import Onboarding from "./pages/Onboarding";
 import Quiz from "./pages/Quiz";
 import MatchPoolConfirmation from "./pages/MatchPoolConfirmation";
 import Result from "./pages/Result";
+import Match from "./pages/Match";
 import ShootYourShot from "./pages/ShootYourShot";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
@@ -31,6 +32,7 @@ const App = () => (
             <Route path="/quiz" element={<ProtectedRoute><Quiz /></ProtectedRoute>} />
             <Route path="/confirmation" element={<ProtectedRoute><MatchPoolConfirmation /></ProtectedRoute>} />
             <Route path="/result" element={<ProtectedRoute><Result /></ProtectedRoute>} />
+            <Route path="/match" element={<ProtectedRoute><Match /></ProtectedRoute>} />
             <Route path="/shoot" element={<ProtectedRoute><ShootYourShot /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
