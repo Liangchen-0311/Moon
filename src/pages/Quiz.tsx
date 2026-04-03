@@ -53,7 +53,7 @@ const Quiz: React.FC = () => {
             answer: q.options[newAnswers[i]] || "",
           }));
 
-          await supabaseAuth.from("quiz_answers").upsert(
+          const { error: upsertError } = await supabaseAuth.from("quiz_answers").upsert(
             {
               user_id: user.id,
               answers: questionsWithAnswers,
@@ -62,10 +62,18 @@ const Quiz: React.FC = () => {
             { onConflict: "user_id" }
           );
 
-          // Then call generate-profile
-          await supabaseAuth.functions.invoke('generate-profile', {
-            body: { user_id: user.id }
-          });
+          if (upsertError) {
+            console.error("quiz_answers upsert failed:", JSON.stringify(upsertError));
+          } else {
+            console.log("quiz_answers saved successfully for user:", user.id);
+            // Then call generate-profile
+            const { error: fnError } = await supabaseAuth.functions.invoke('generate-profile', {
+              body: { user_id: user.id }
+            });
+            if (fnError) {
+              console.error("generate-profile error:", fnError);
+            }
+          }
         } catch (err) {
           console.error("Failed to save answers or generate profile:", err);
         }
