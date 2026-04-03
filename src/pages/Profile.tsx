@@ -121,15 +121,15 @@ const Profile: React.FC = () => {
         </div>
 
         {/* Profile Summary */}
-        {profileSummary && (
-          <div className="mb-6 p-5 rounded-2xl bg-secondary/50 border border-border">
-            <div className="flex items-center gap-2 mb-3">
-              <Sparkles size={16} className="text-primary" />
-              <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">我的性格画像</span>
-            </div>
-            <p className="text-sm text-foreground leading-relaxed">{profileSummary}</p>
+        <div className="mb-6 p-5 rounded-2xl bg-secondary/50 border border-border">
+          <div className="flex items-center gap-2 mb-3">
+            <Sparkles size={16} className="text-primary" />
+            <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">你的性格画像 ✨</span>
           </div>
-        )}
+          <p className="text-sm text-foreground leading-relaxed">
+            {profileSummary || "完成测评后将生成你的专属性格画像"}
+          </p>
+        </div>
 
         {/* Info Cards */}
         <div className="space-y-3 mb-8">
